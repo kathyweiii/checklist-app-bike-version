@@ -1,0 +1,152 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+  
+  .question{
+    margin-bottom: 10px;
+  }
+  
+  h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 5px;
+  }
+
+  h2 {
+    text-align: center;
+    color: #333;
+    margin-top: 4px;
+  }
+  
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+    margin-right: 10px;
+  }
+  
+  input {
+    width: calc(100% - 120px);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+  
+  select {
+    width: 120px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+  }
+  
+  .road-entry {
+    display: flex;
+    align-items: center;
+    /* margin-bottom: 10px; */
+  }
+  
+  .road-entry input {
+    flex: 1;
+  }
+  
+  .road-entry select {
+    margin-left: 10px; /* 添加間距 */
+    margin-bottom: 10px;
+  }
+  
+  button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+  
+  .button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  
+  
+  .button-group button {
+    width: 48%;
+    padding: 10px 20px;
+    margin-right: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border: 2px solid #007bff;
+    background-color: #ffffff;
+    color: #007bff;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .button-group button.active {
+    background-color: #007bff;
+    color: #ffffff;
+    /* border: 2px solid #0056b3; */
+  }
+  
+  .button-group button:hover {
+    background-color: #0056b3;
+    color: #ffffff;
+  }
+  
+  .button-group {
+    margin-bottom: 20px;
+  }
+  
+  .submit-button-container {
+    display: flex;
+    justify-content: center;  /* 讓按鈕置中 */
+    width: 100%;  /* 確保按鈕在父容器內水平居中 */
+    margin-top: 20px;
+  }
+  
+  .submit-button {
+    background-color: #28a745;
+    padding: 12px 18px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    width: auto;
+  }
+  
+  .submit-button:hover {
+    background-color: #218838;
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

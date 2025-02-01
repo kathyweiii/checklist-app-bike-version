@@ -1,0 +1,305 @@
+.checklist-container {
+    width: 90%; /* 調整為 80% 以增加寬度 */
+    /* max-width: 1300px; */
+    margin: 50px auto; /* 上下距離保持，左右置中 */
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow-x: auto;
+  }
+
+  .road-tabs {
+    display: flex;
+    margin-bottom: 10px;
+    position: sticky;
+  top: 0;
+  z-index: 10; /* 保证其在滚动时显示在上层 */
+  background-color: white; /* 设定背景色以防止滚动时内容遮挡 */
+  }
+  
+  .road-tab-button {
+    padding: 10px 20px;
+    margin-right: 10px;
+    cursor: pointer;
+    border: 2px solid #4CAF50;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    color: #4CAF50;
+    font-weight: 500;
+    font-size: 1.2em;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+  }
+  
+  .road-tab-button.active {
+    background-color: #4CAF50; /* 綠色，表示目前選擇 */
+    color: white;
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
+  }
+  .road-tab-button:hover {
+    background-color: #388e3c; /* 當懸停時的背景色，稍微深一些的灰色 */
+    color: white;
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  
+  .sheet-content {
+    /* overflow-x: auto; 
+    max-height: calc(100vh - 200px); 
+    overflow-y: auto;  */
+
+  }
+
+  .checklist-header th, .checklist-header td{
+    text-align: center; /* Horizontal centering */
+  vertical-align: middle; /* Vertical centering */
+  }
+
+  .checklist-header{
+    table-layout: auto;
+  }
+  
+  table {
+    width: 100%; /* 表格寬度佔滿容器 */
+    border-collapse: collapse; /* 合併邊框 */
+    /* table-layout: fixed; */
+  }
+  
+  th, td {
+    padding: 10px; /* 調整內邊距 */
+    border: 1px solid #ccc; /* 單元格邊框 */
+    text-align: center; /* 文字置中 */
+    vertical-align: top; /* 讓內容從上部對齊 */
+  }
+  th.description-header {
+    width: 250px; /* 設置檢查細項表頭的寬度 */
+  }
+  th.category-header {
+    width: 80px; /* 設置檢查類別及項次表頭的寬度，使其更窄 */
+  text-align: center; /* 文字置中 */
+  }
+  
+  td.description-cell {
+    text-align: left; /* 檢查細項文字靠左對齊 */
+    padding-left: 15px; /* 調整左側邊距 */
+    width: 30%;
+  }
+  td.remark-cell {
+    position: relative; /* 父元素需要 relative */
+    padding: 0; /* 確保沒有多餘間距 */
+    height: 100%; /* 確保 td 撐滿高度 */
+    vertical-align: top; /* 保證內容頂部對齊 */
+  }
+  
+
+  .option-section {
+    display: flex;
+    flex-direction: column; /* 垂直排列選項 */
+    justify-content: center; /* 使選項在垂直方向置中 */
+  }
+
+  .options div {
+    display: flex;
+    align-items: center; /* 讓按鈕和文字保持在同一行 */
+    margin-bottom: 5px; /* 每個選項之間的間距 */
+  }
+  .options span {
+    font-size: inherit; /* 繼承父元素的字體大小 */
+    line-height: normal; /* 確保行高正常 */
+  }
+  .option-cell{
+    max-width: 10px;
+  }
+  .remark-cell{
+    flex: 1;
+    padding: 5px;
+    width: 50%;
+  }
+
+  .remark-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    /* max-width: 220px; */
+    overflow: hidden;
+    box-sizing: border-box;
+    position: relative;
+    justify-content: space-between; /* 保持上部內容與下部空間分隔 */
+  }
+  .remark {
+    height: auto; /* 讓高度隨內容自動調整 */
+    box-sizing: border-box; /* 包括內邊距和邊框 */
+    background-color: transparent; /* 背景透明 */
+    font-size: inherit; /* 繼承字體大小 */
+    
+    border: 1px solid #ccc; /* 默認邊框 */
+  transition: border-color 0.3s; /* 過渡效果 */
+  margin-left: 8px;
+  margin-top: 8px;
+  min-height: 100px;
+  margin-right: 10px;
+
+  }
+  .remark.highlight {
+    border-color: #ff0000; /* 高亮顏色 */
+  }
+
+
+  .upload-icon {
+    width: 20px;
+    height: 20px;
+    fill: white; /* Icon 顏色 */
+  }
+  
+  .image-preview {
+    margin-top: 10px;
+    max-width: 100%;
+  }
+
+  .uploaded-image {
+    max-width: 100%;
+    height: auto;
+    margin-right: 5px;
+  }
+  .upload-image-button {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    cursor: pointer;
+  }
+
+  .upload-image-label {
+    position: absolute;
+    bottom:5px;
+    right: 5px;
+    cursor: pointer;
+    margin-bottom: 0px;
+    margin-right: 0px;
+    background-color: rgba(0, 0, 0, 0.5); /* 半透明圓形底色 */
+    border-radius: 50%; /* 圓形外觀 */
+    padding: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  
+  
+  .bullet-button {
+    width: 18px; /* 按鈕寬度 */
+    height: 18px; /* 按鈕高度 */
+    padding: 0; /* 確保沒有額外的內邊距 */
+    margin: 0; /* 確保沒有額外的外邊距 */
+    border: 1px solid rgba(0, 0, 0, 0.5); /* 輕微的黑色邊框 */
+    border-radius: 50%; /* 圓形 */
+    background-color: white; /* 背景為白色 */
+    cursor: pointer;
+    outline: none; /* 去掉邊框 */
+    position: relative; /* 讓黑色點的位置相對於按鈕 */
+    transition: background-color 0.3s; /* 添加過渡效果 */
+    margin-right: 5px; /* 調整按鈕與文字的間距 */
+  }
+  
+  .bullet-button.active {
+    background-color: white; /* 激活時保持白色背景 */
+  }
+  
+  .bullet-button.active::after {
+    content: '';
+    position: absolute;
+    top: 50%; /* 垂直居中 */
+    left: 50%; /* 水平居中 */
+    width: 10px; /* 點的大小 */
+    height: 10px; /* 點的大小 */
+    background-color: black; /* 點的顏色 */
+    border-radius: 50%; /* 點的圓形 */
+    transform: translate(-50%, -50%); /* 使其在中心位置 */
+  }
+  
+
+  
+  .tabs {
+    display: flex;
+    margin-bottom: 20px;
+    position: sticky;
+  top: 0;
+  z-index: 10; /* 保证其在滚动时显示在上层 */
+  background-color: white; /* 设定背景色以防止滚动时内容遮挡 */
+  }
+  
+  
+  .tab-button {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-bottom: none; /* 去掉底邊框，讓書籤懸掛 */
+    border-radius: 5px 5px 0 0; /* 只為上邊緣圓角 */
+    padding: 10px 15px;
+    margin-right: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    color: #333; /* 默認文字顏色 */
+  }
+  
+  .tab-button.active {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .tab-button:hover {
+    background-color: #0056b3; /* 懸停顏色 */
+    color: white;
+  }
+  
+  span {
+    white-space: nowrap; /* 防止文字換行 */
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+
+  .save-button-container {
+    margin-top: 20px; /* 增加按鈕與表格的間距 */
+    text-align: right; /* 右對齊 */
+  }
+  
+  .save-button {
+    padding: 10px 20px;
+    color: white; /* 字體顏色 */
+    border: none; /* 無邊框 */
+    border-radius: 5px; /* 圓角 */
+    cursor: pointer; /* 鼠標樣式 */
+  }
+  
+  .save-button:hover {
+    background-color: #0272e9; 
+  }
+
+  .saveAndSubmit-button{
+    background-color: #4fb953;
+  }
+  .saveAndSubmit-button:hover{
+    background-color: #4CAF50;
+  }
+
+  .disabled {
+    background-color: gray;
+    cursor: not-allowed;
+    opacity: 0.5; /* 讓按鈕看起來更淡 */
+  }
+  .delete-button{
+    background-color: #df2b2b;
+  }
+  .delete-button:hover{
+    background-color: #ca2727;
+  }
+  
