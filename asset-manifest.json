@@ -1,0 +1,19 @@
+{
+  "files": {
+    "main.css": "/checklist-app-bike-version/static/css/main.5779ee9a.css",
+    "main.js": "/checklist-app-bike-version/static/js/main.b85482c5.js",
+    "static/js/213.ee8dbded.chunk.js": "/checklist-app-bike-version/static/js/213.ee8dbded.chunk.js",
+    "static/js/732.4b0dd523.chunk.js": "/checklist-app-bike-version/static/js/732.4b0dd523.chunk.js",
+    "static/js/453.8529e17e.chunk.js": "/checklist-app-bike-version/static/js/453.8529e17e.chunk.js",
+    "index.html": "/checklist-app-bike-version/index.html",
+    "main.5779ee9a.css.map": "/checklist-app-bike-version/static/css/main.5779ee9a.css.map",
+    "main.b85482c5.js.map": "/checklist-app-bike-version/static/js/main.b85482c5.js.map",
+    "213.ee8dbded.chunk.js.map": "/checklist-app-bike-version/static/js/213.ee8dbded.chunk.js.map",
+    "732.4b0dd523.chunk.js.map": "/checklist-app-bike-version/static/js/732.4b0dd523.chunk.js.map",
+    "453.8529e17e.chunk.js.map": "/checklist-app-bike-version/static/js/453.8529e17e.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.5779ee9a.css",
+    "static/js/main.b85482c5.js"
+  ]
+}
