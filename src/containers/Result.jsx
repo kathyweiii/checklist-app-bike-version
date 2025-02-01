@@ -4,16 +4,7 @@ import "./Result.css";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { styles } from "../fonts/styles.js";
-import { tabNames } from "../data/TabNames";
-import {
-  Document,
-  Page,
-  Text,
-  View,
-  StyleSheet,
-  Font,
-  pdf,
-} from "@react-pdf/renderer";
+import { Document, Page, Text, pdf } from "@react-pdf/renderer";
 
 const Result = () => {
   // 假設您從路由中獲取到所需的數據
@@ -29,12 +20,12 @@ const Result = () => {
     roadNames,
     directions,
     roads,
+    type,
     activeButtons,
     highlightRemarks,
     userInput,
     uploadedImages,
   } = location.state; // 根據需要調整
-  // console.log("state: ", location.state);
 
   const [onlyNonCompliant, setOnlyNonCompliant] = useState(false);
   const [improvementField, setImprovementField] = useState(false);
@@ -46,40 +37,6 @@ const Result = () => {
   const [isLoading, setIsLoading] = useState(false); // 加载状态
 
   const pdfRef = useRef(null);
-
-  // 從 local storage 加載數據
-  // useEffect(() => {
-  //   console.log("location.state from: ", location.state?.from);
-  //   console.log("@Rusult state: ", location.state);
-
-  //   if (location.state?.from === "CheckList") {
-  //     localStorage.removeItem("outputData");
-  //     console.log("delete outputData");
-  //   } else if (location.state?.from === "Output") {
-  //     const { outputList, improvementInputs } = location.state;
-  //     setOutputList(outputList);
-  //     setImprovementInputs(improvementInputs);
-  //   }
-  //   else {
-  //     ///從output按上一頁回到result: 從location.state或localStorage撈improvementInputs和outputList
-  //     const loadedData = localStorage.getItem("outputData");
-  //     console.log("loadedData: ", loadedData);
-
-  //     if (loadedData) {
-  //       if (Array.isArray(loadedData.outputList)) {
-  //         setOutputList(loadedData.outputList);
-  //         console.log("outputList: ", loadedData.outputList);
-  //       }
-  //       if (Array.isArray(loadedData.improvementInputs)) {
-  //         setImprovementInputs(loadedData.improvementInputs);
-  //         console.log(
-  //           "location.state?.improvementInputs: ",
-  //           location.state?.improvementInputs
-  //         );
-  //       }
-  //     }
-  //   }
-  // }, []);
 
   useEffect(() => {
     setCurrentPageCode(
@@ -93,7 +50,7 @@ const Result = () => {
     setCurrentPageName(name);
   }, [selectedRoad, onlyNonCompliant, improvementField]);
 
-  const choosingResult = onlyNonCompliant ? highlightRemarks : activeButtons;
+  const choosingResult = onlyNonCompliant ? userInput : activeButtons;
   const groupedByRoadName = roads.reduce((acc, road) => {
     acc[road] = []; // 初始化每個路名的陣列
 
@@ -115,16 +72,6 @@ const Result = () => {
     // console.log("acc: ", acc, "len: ", acc.length);
     return acc;
   }, {});
-
-  // 根據檢查代碼的ID來獲取它所屬的sheet
-  const getSheetById = (id) => {
-    for (const sheet in CheckItems) {
-      if (CheckItems[sheet].some((item) => item.id === id)) {
-        return sheet; // 返回該ID所屬的sheet，例如 "A" 或 "B"
-      }
-    }
-    return null; // 如果沒有找到匹配的，返回null
-  };
 
   const handleChange = () => {
     const state = {
@@ -257,12 +204,6 @@ const Result = () => {
     </Document>
   );
 
-  const loadDisclaimerPDF = async () => {
-    const response = await fetch(`${process.env.PUBLIC_URL}/disclaimer.pdf`); // 填寫disclaimer.pdf的路徑
-    const arrayBuffer = await response.arrayBuffer(); // 獲取 PDF 的字節數據
-    return arrayBuffer;
-  };
-
   const generatedMultiplePDF = async (isOnly) => {
     pdfRef.current = new jsPDF("p", "mm", "a4");
     const roads = Object.keys(groupedByRoadName);
@@ -305,16 +246,6 @@ const Result = () => {
       multiPdfDoc.getPageIndices()
     );
     multiPages.forEach((page) => finalPdf.addPage(page));
-
-    // 加載免責聲明頁 PDF
-    // const disclaimerPdfDoc = await PDFDocument.load(disclaimerPageBytes);
-    // const disclaimerPages = await finalPdf.copyPages(
-    //   disclaimerPdfDoc,
-    //   disclaimerPdfDoc.getPageIndices()
-    // );
-    // disclaimerPages.forEach((page) => finalPdf.addPage(page));
-
-    // 保存並返回最終合併後的 PDF 字節
     return await finalPdf.save();
   };
 
@@ -322,11 +253,11 @@ const Result = () => {
     setIsLoading(true);
     const multiPageBytes = await generatedMultiplePDF(isOnly);
     const coverPageBytes = await generatedFirstPDF();
-    const disclaimerPageBytes = await loadDisclaimerPDF();
+    // const disclaimerPageBytes = await loadDisclaimerPDF();
     const mergedPdfBytes = await mergePDFs(
       coverPageBytes,
-      multiPageBytes,
-      disclaimerPageBytes
+      multiPageBytes
+      // disclaimerPageBytes
     );
     const blob = new Blob([mergedPdfBytes], { type: "application/pdf" });
     const blobUrl = URL.createObjectURL(blob);
@@ -340,7 +271,7 @@ const Result = () => {
   };
 
   return (
-    <div>
+    <React.Fragment>
       <div className="top-bar">
         <button
           className="topbar-button topbar-button-left"
@@ -391,8 +322,6 @@ const Result = () => {
               </li>
             ))}
           </ul>
-
-          {/* 顯示區域 */}
           <div className="display-section">
             <h2>篩選</h2>
             <div className="checkbox-container">
@@ -403,7 +332,7 @@ const Result = () => {
                   onChange={() => setOnlyNonCompliant(!onlyNonCompliant)}
                 />
                 具交通安全風險
-                <br></br>
+                <br />
                 之項目
               </label>
             </div>
@@ -413,7 +342,6 @@ const Result = () => {
             <button
               className="output-button all"
               onClick={() => processQueue(false)}
-              // onClick={processQueue}
               disabled={isLoading}
             >
               <svg
@@ -465,7 +393,7 @@ const Result = () => {
                         textAlign: "center",
                         verticalAlign: "middle",
                         backgroundColor: "#e0e0e0",
-                        border: "1px solid #ccc", // 灰色的邊線
+                        border: "1px solid #ccc",
                       }}
                     >
                       檢查
@@ -476,7 +404,7 @@ const Result = () => {
                       style={{
                         verticalAlign: "middle",
                         backgroundColor: "#e0e0e0",
-                        border: "1px solid #ccc", // 灰色的邊線
+                        border: "1px solid #ccc",
                       }}
                     >
                       檢查細項
@@ -486,7 +414,7 @@ const Result = () => {
                         width: "40px",
                         verticalAlign: "middle",
                         backgroundColor: "#e0e0e0",
-                        border: "1px solid #ccc", // 灰色的邊線
+                        border: "1px solid #ccc",
                       }}
                     >
                       選項
@@ -495,7 +423,7 @@ const Result = () => {
                       style={{
                         verticalAlign: "middle",
                         backgroundColor: "#e0e0e0",
-                        border: "1px solid #ccc", // 灰色的邊線
+                        border: "1px solid #ccc",
                       }}
                     >
                       備註
@@ -506,7 +434,7 @@ const Result = () => {
                           width: "40%",
                           verticalAlign: "middle",
                           backgroundColor: "#e0e0e0",
-                          border: "1px solid #ccc", // 灰色的邊線
+                          border: "1px solid #ccc",
                         }}
                       >
                         改善說明
@@ -516,105 +444,92 @@ const Result = () => {
                 </thead>
                 <tbody>
                   {groupedByRoadName[selectedRoad].map((item, index) => {
-                    // 根據 item 獲取對應的 CheckItems 項目
-                    const checkItem = Object.values(CheckItems)
-                      .flat()
-                      .find((check) => check.id === item.id);
-                    const sheet = getSheetById(item.id);
-                    const isFirstInSheet =
-                      index === 0 ||
-                      getSheetById(
-                        groupedByRoadName[selectedRoad][index - 1].id
-                      ) !== sheet;
-
+                    const checkItem = CheckItems.find(
+                      (check) => check.id === item.id
+                    );
                     return (
-                      <React.Fragment key={item.id}>
-                        {isFirstInSheet && (
-                          <tr>
-                            <td
-                              colSpan={onlyNonCompliant ? 5 : 4}
-                              style={{
-                                fontWeight: "bold",
-                                padding: "10px",
-                                backgroundColor: "#f9f9f9", // 柔和的背景色
-                              }}
-                            >
-                              {tabNames[sheet]}
-                            </td>
-                          </tr>
-                        )}
-                        <tr>
-                          <td style={{ textAlign: "center" }}>
-                            {sheet} {item.id}
-                          </td>
-                          <td>{checkItem.description}</td>
-                          <td>
-                            {item.option}
-                            {item.option === "是" &&
-                              checkItem.asterisk === "yes" && (
-                                <span className="asterisk">＊</span>
-                              )}
-                            {item.option === "否" &&
-                              checkItem.asterisk === "no" && (
-                                <span className="asterisk">＊</span>
-                              )}
-                          </td>
-                          <td
-                            style={{
-                              padding: "10px",
-                              boxSizing: "border-box",
-                              position: "relative",
-                            }}
-                          >
-                            <div className="remark-display">
-                              {item.remark}
-                              {Array.isArray(item.image) &&
-                                item.image.length > 0 && (
-                                  <div className="image-gallery">
-                                    {item.image.map((imgSrc, idx) => (
-                                      <img
-                                        key={idx}
-                                        src={imgSrc}
-                                        alt={`Uploaded ${idx + 1}`}
-                                        style={{
-                                          maxWidth: "250px",
-                                          marginTop: "10px",
-                                          position:
-                                            "relative" /* 讓圖片能相對備註欄移動 */,
-                                          left: onlyNonCompliant
-                                            ? "-30px"
-                                            : "0",
-                                          zIndex: 1,
-                                        }}
-                                      />
-                                    ))}
-                                  </div>
-                                )}
-                            </div>
-                          </td>
+                      <tr key={`${item.id}-${index}`}>
+                        <td style={{ textAlign: "center" }}>{item.id}</td>
+                        <td>
+                          <div className="no-break">
+                            {typeof checkItem.description === "object"
+                              ? type === "intersection"
+                                ? checkItem.description.intersection
+                                : checkItem.description.road
+                              : checkItem.description}
+                          </div>
+                        </td>
 
-                          {onlyNonCompliant && (
-                            <td className="rule-display">
-                              <div
-                                dangerouslySetInnerHTML={{
-                                  __html: checkItem.rule || "無說明",
-                                }}
-                              />
-                            </td>
-                          )}
-                        </tr>
-                      </React.Fragment>
+                        <td>
+                          {item.option}
+                          {item.option === "是" &&
+                            checkItem.asterisk === "yes" && (
+                              <span className="asterisk">＊</span>
+                            )}
+                          {item.option === "否" &&
+                            checkItem.asterisk === "no" && (
+                              <span className="asterisk">＊</span>
+                            )}
+                        </td>
+                        <td
+                          style={{
+                            padding: "10px",
+                            boxSizing: "border-box",
+                            position: "relative",
+                          }}
+                        >
+                          <div className="remark-display">
+                            {item.remark}
+                            {Array.isArray(item.image) &&
+                              item.image.length > 0 && (
+                                <div className="image-gallery">
+                                  {item.image.map((imgSrc, idx) => (
+                                    <img
+                                      key={idx}
+                                      src={imgSrc}
+                                      alt={`Uploaded ${idx + 1}`}
+                                      style={{
+                                        maxWidth: "250px",
+                                        marginTop: "10px",
+                                        position: "relative",
+                                        left: onlyNonCompliant ? "-30px" : "0",
+                                        zIndex: 1,
+                                      }}
+                                    />
+                                  ))}
+                                </div>
+                              )}
+                          </div>
+                        </td>
+                        {onlyNonCompliant && (
+                          <td className="rule-display">
+                            <div
+                              dangerouslySetInnerHTML={{
+                                __html: checkItem.rule || "無說明",
+                              }}
+                            />
+                          </td>
+                        )}
+                      </tr>
                     );
                   })}
                 </tbody>
               </table>
             ) : (
-              <p>無具交通安全風險之項目。</p>
+              <table>
+                <tbody>
+                  <tr>
+                    <td colSpan={onlyNonCompliant ? 5 : 4}>
+                      無具交通安全風險之項目。
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             )}
           </div>
         </div>
       </div>
-    </div>
+    </React.Fragment>
   );
 };
 

@@ -411,3 +411,8 @@ table th {
   text-align: center;
   padding: 20px; /* 增加內邊距，避免文字太貼邊 */
 }
+
+.no-break {
+  padding-top: 5mm;
+  padding-bottom: 5mm;
+}

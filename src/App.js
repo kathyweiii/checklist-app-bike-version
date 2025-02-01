@@ -15,7 +15,6 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* <Route path="/" element={<HomePageWrapper />} /> */}
         <Route path="/" element={<HomePage />} />
         <Route path="/checklist" element={<CheckList />} />
         <Route path="/result" element={<Result />} />
@@ -24,15 +23,5 @@ function App() {
     </Router>
   );
 }
-
-// function HomePageWrapper() {
-//   const navigate = useNavigate();
-
-//   const handleFormSubmit = (data) => {
-//     navigate("/checklist", { state: data });
-//   };
-
-//   return <HomePage onSubmit={handleFormSubmit} />;
-// }
 
 export default App;

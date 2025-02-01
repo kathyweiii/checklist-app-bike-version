@@ -1,7 +1,7 @@
 {
-  "name": "checklist-app",
+  "name": "checklist-app-bike-version",
   "version": "0.1.0",
-  "homepage": "https://kathyweiii.github.io/checklist-app",
+  "homepage": "https://kathyweiii.github.io/checklist-app-bike-version",
   "private": true,
   "dependencies": {
     "@react-pdf/renderer": "^4.0.0",

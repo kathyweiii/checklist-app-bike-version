@@ -2,47 +2,20 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./CheckList.css";
 import CheckItems from "../data/CheckItem";
-import { tabNames } from "../data/TabNames";
 
 function CheckList() {
   const location = useLocation();
   const navigate = useNavigate();
   const { locationName, type, roadNames, directions } = location.state || {}; //如果没有传入 state，则使用默认值
 
-  // 默认值
-  const defaultLocationName = "某地點";
-  const defaultType = "intersection";
-  const defaultLegCount = 3;
-  const defaultRoadNames = ["路名1", "路名2", "路名3"];
-  const defaultDirections = ["東側", "南側", "西側"];
-
-  const currentLocationName = locationName || defaultLocationName;
-  const currentType = type || defaultType;
-  const currentRoadNames = roadNames || defaultLegCount;
-  // console.log("currentRoadNames: ", currentRoadNames);
-  const currentDirections = directions || defaultDirections;
-
-  const initialSheets = ["A", "B", "C", "D"];
-  const [activeSheet, setActiveSheet] = useState(initialSheets[0]);
-
   const [activeButtons, setActiveButtons] = useState({});
   const [userInput, setUserInput] = useState({});
   const [highlightRemarks, setHighlightRemarks] = useState({});
   const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
   const [uploadedImages, setUploadedImages] = useState({});
-  const roads = currentRoadNames.map(
-    (road, index) => `${road}-${currentDirections[index]}`
-  );
+  const roads = roadNames.map((road, index) => `${road}-${directions[index]}`);
 
   const [activeRoad, setActiveRoad] = useState(roads[0]);
-
-  const choosingSheet = () => {
-    if (currentType === "intersection") {
-      return initialSheets;
-    } else {
-      return ["A"];
-    }
-  };
 
   // 從 local storage 加載數據
   useEffect(() => {
@@ -66,27 +39,19 @@ function CheckList() {
   //送出按鈕
   useEffect(() => {
     const checkFormValidity = () => {
-      const totalCheckAmount = choosingSheet().reduce((sum, sheet) => {
-        const sheetItemCount =
-          CheckItems[sheet].length * currentRoadNames.length;
-        return sum + sheetItemCount;
-      }, 0);
-
+      // 總檢查項目數 = 檢查項目數量 * 每個路段數量
+      const totalCheckAmount = CheckItems.length * roadNames.length;
       const totalActiveButtons = Object.values(activeButtons).reduce(
-        (sum, item) => {
-          return sum + Object.keys(item).length;
-        },
+        (sum, item) => sum + Object.keys(item).length,
         0
       );
 
       const allOptionsSelected = totalActiveButtons === totalCheckAmount;
 
-      const allRemarkFilled = initialSheets.every((sheet) => {
-        const remarksForSheet = highlightRemarks[sheet] || {};
-
-        // 如果highlightRemark有值，繼續檢查是否所有的值都為 false (true：有需要新增備註)
-        return Object.values(remarksForSheet).every((highlight) => !highlight);
-      });
+      const allRemarkFilled = Object.values(highlightRemarks).every(
+        (roadRemarks) =>
+          Object.values(roadRemarks).every((highlight) => !highlight)
+      );
 
       setIsSubmitEnabled(allOptionsSelected && allRemarkFilled);
 
@@ -107,7 +72,6 @@ function CheckList() {
 
   const handleChangeRoad = (road) => {
     setActiveRoad(road);
-    setActiveSheet(choosingSheet()[0]);
   };
 
   // 插入图片
@@ -141,33 +105,10 @@ function CheckList() {
     console.log("activeButtons: ", activeButtons);
   }, [activeButtons]);
 
-  // const handleImageUpload = (e, remarkId) => {
-  //   const file = e.target.files[0];
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onload = function (upload) {
-  //       const imgElement = document.createElement("img");
-  //       imgElement.src = upload.target.result;
-  //       imgElement.className = "uploaded-image";
-
-  //       // 选择对应的remark-cell并将图片插入到textarea的下方
-  //       const remarkCell = document.querySelector(`#remark-${remarkId}`);
-  //       const imagePreview = document.createElement("div");
-  //       imagePreview.className = "image-preview";
-  //       imagePreview.appendChild(imgElement);
-
-  //       remarkCell.parentNode.appendChild(imagePreview);
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
-
   const toggleButton = (itemId, option) => {
-    // 獲取當前的 item 的索引
-    const itemIndex = CheckItems[activeSheet].findIndex(
-      (item) => item.id === itemId
-    );
-    const currentItem = CheckItems[activeSheet][itemIndex];
+    // 找出當前項目資料
+    const itemIndex = CheckItems.findIndex((item) => item.id === itemId);
+    const currentItem = CheckItems[itemIndex];
 
     setActiveButtons((prev) => {
       const updatedButtons = {
@@ -177,7 +118,7 @@ function CheckList() {
           [itemId]: option,
         },
       };
-      console.log("Updated active button: ", updatedButtons);
+
       return updatedButtons;
     });
 
@@ -328,26 +269,13 @@ function CheckList() {
   return (
     <div className="checklist-container">
       <div className="road-tabs">
-        {roads.map((road, index) => (
+        {roads.map((road) => (
           <button
             key={road}
             className={`road-tab-button ${activeRoad === road ? "active" : ""}`}
             onClick={() => handleChangeRoad(road)}
           >
             {road}
-          </button>
-        ))}
-      </div>
-
-      {/* 顯示分頁標籤 */}
-      <div className="tabs">
-        {choosingSheet().map((sheet, index) => (
-          <button
-            key={sheet}
-            className={`tab-button ${activeSheet === sheet ? "active" : ""}`}
-            onClick={() => setActiveSheet(sheet)}
-          >
-            {tabNames[sheet]}
           </button>
         ))}
       </div>
@@ -363,10 +291,20 @@ function CheckList() {
             </tr>
           </thead>
           <tbody>
-            {CheckItems[activeSheet].map((item) => (
+            {CheckItems.map((item) => (
               <tr key={item.id}>
                 <td>{item.id}</td>
-                <td className="description-cell">{item.description}</td>
+                <td
+                  className="description-cell"
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      (item.id === "L03") | (item.id === "I15")
+                        ? type === "intersection"
+                          ? item.description.intersection
+                          : item.description.road
+                        : item.description,
+                  }}
+                />
 
                 <React.Fragment key={`${item.id}:${activeRoad}`}>
                   {/* 选项 */}
@@ -451,6 +389,18 @@ function CheckList() {
             ))}
           </tbody>
         </table>
+      </div>
+
+      <div className="road-tabs">
+        {roads.map((road) => (
+          <button
+            key={road}
+            className={`road-tab-button ${activeRoad === road ? "active" : ""}`}
+            onClick={() => handleChangeRoad(road)}
+          >
+            {road}
+          </button>
+        ))}
       </div>
 
       {/* 保存和送出按鈕 */}
